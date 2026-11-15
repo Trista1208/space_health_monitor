@@ -273,6 +273,10 @@ h2.title{font-family:var(--display);font-weight:600;font-size:68px;line-height:1
 .s2b .chart{width:100%;height:100%;display:block}
 .s2b.visible .draw{animation:draw 2.6s var(--ease) forwards;animation-delay:var(--dl,0s)}
 .s2b.visible .fadeT{opacity:1;transition-delay:var(--dl,0s)}
+.slide.visible [data-step]:not(.shown){opacity:0!important;transition:opacity .4s}
+.slide [data-step].shown{opacity:1;transition:opacity .5s var(--ease)}
+.slide.visible [data-hide].hid{opacity:0!important}
+.slide.visible .draw[data-step]:not(.shown){animation:none}
 .sref .head{position:absolute;left:72px;top:140px}
 .refc{position:absolute;top:290px;width:556px;height:520px;padding:26px 32px}
 .r1{left:72px}.r2{left:682px}.r3{left:1292px}
@@ -434,19 +438,19 @@ body.editing [contenteditable="true"]{outline:1px dashed rgba(142,224,79,.45);ou
       <div class="lbl reveal" style="--d:.05">The science</div>
       <h2 class="title reveal" style="--d:.15">A bubble you can't see, measured in one breath.</h2>
     </div>
-    <div class="eq2 reveal" style="--d:.3">
-      <div class="l1"><span>EVA = ↓Pressure</span><span class="arrow">=</span><span class="bub"><b></b><b></b><b></b></span><span class="arrow">→</span><span>DCS</span></div>
-      <div class="l2"><span>↑</span><span class="bub"><b></b><b></b><b></b></span><span>= ↑ DCS risk</span></div>
+    <div class="eq2">
+      <div class="l1"><span data-step="1" style="display:flex;align-items:center;gap:26px"><span>EVA = ↓Pressure</span><span class="arrow">=</span><span class="bub"><b></b><b></b><b></b></span></span><span data-step="2" style="display:flex;align-items:center;gap:26px"><span class="arrow">→</span><span>DCS</span></span></div>
+      <div class="l2" data-step="2"><span>↑</span><span class="bub"><b></b><b></b><b></b></span><span>= ↑ DCS risk</span></div>
     </div>
-    <div class="fact reveal" style="--d:.45">
+    <div class="fact" data-step="3">
       <div class="ft">Adjustable factors:</div>
       <ul><li>Oxygen prebreathe duration</li><li>Decompression rate</li><li>Time between EVAs</li></ul>
     </div>
-    <div class="instead reveal" style="--d:.6">
+    <div class="instead" data-step="4">
       <p>Currently based on generalisable data.</p>
       <p>Instead, we monitor it in real-time in an individual.</p>
     </div>
-    <div class="alv alv2 reveal" style="--d:.75">
+    <div class="alv alv2" data-step="5">
       <div class="state" id="alvState" style="color:var(--ok)">NORMAL</div>
       <div class="breath">one breath, ten seconds</div>
       <svg viewBox="0 0 760 300" aria-label="Alveolus and capillary, normal versus after a bubble">
@@ -622,18 +626,24 @@ class SlidePresentation{
   setupNav(){
     addEventListener('keydown',e=>{
       if(document.body.classList.contains('editing'))return;
-      if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();this.show(this.i+1)}
-      else if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();this.show(this.i-1)}
+      if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();this.next()}
+      else if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();this.prev()}
       else if(e.key==='Home')this.show(0);else if(e.key==='End')this.show(this.slides.length-1);
       else if(/^[1-6]$/.test(e.key))this.show(+e.key-1);
       else if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen?.()}
     });
     addEventListener('hashchange',()=>{const n=(parseInt(location.hash.slice(1))||1)-1;if(n!==this.i)this.show(n)});
     let x0=null;addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
-    addEventListener('touchend',e=>{if(x0==null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>40)this.show(this.i+(dx<0?1:-1));x0=null});
-    let lock=0;addEventListener('wheel',e=>{const t=Date.now();if(t-lock<900||Math.abs(e.deltaY)<20)return;lock=t;this.show(this.i+(e.deltaY>0?1:-1))},{passive:true});
-    this.stage.addEventListener('click',e=>{if(document.body.classList.contains('editing')||e.target.closest('.step,a,button'))return;this.show(this.i+(e.clientX<innerWidth*.25?-1:1))});
+    addEventListener('touchend',e=>{if(x0==null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>40)(dx<0?this.next():this.prev());x0=null});
+    let lock=0;addEventListener('wheel',e=>{const t=Date.now();if(t-lock<900||Math.abs(e.deltaY)<20)return;lock=t;(e.deltaY>0?this.next():this.prev())},{passive:true});
+    this.stage.addEventListener('click',e=>{if(document.body.classList.contains('editing')||e.target.closest('.step,a,button'))return;(e.clientX<innerWidth*.25?this.prev():this.next())});
   }
+  maxStep(s){let m=0;s.querySelectorAll('[data-step]').forEach(e=>{m=Math.max(m,+e.getAttribute('data-step'))});return m}
+  applyStep(){const s=this.slides[this.i],k=this.step||0;
+    s.querySelectorAll('[data-step]').forEach(e=>e.classList.toggle('shown',+e.getAttribute('data-step')<=k));
+    s.querySelectorAll('[data-hide]').forEach(e=>e.classList.toggle('hid',+e.getAttribute('data-hide')<=k))}
+  next(){const s=this.slides[this.i];if((this.step||0)<this.maxStep(s)){this.step=(this.step||0)+1;this.applyStep()}else this.show(this.i+1)}
+  prev(){if((this.step||0)>0){this.step--;this.applyStep()}else if(this.i>0){this.show(this.i-1);this.step=this.maxStep(this.slides[this.i]);this.applyStep()}}
   setupDots(){const d=document.getElementById('dots');this.slides.forEach((_,j)=>{const b=document.createElement('button');b.setAttribute('aria-label','Slide '+(j+1));b.onclick=()=>this.show(j);d.appendChild(b)})}
   show(n,first){
     n=Math.max(0,Math.min(n,this.slides.length-1));if(n===this.i&&!first)return;this.i=n;
@@ -644,6 +654,7 @@ class SlidePresentation{
     const s=this.slides[n];Space.target=HOLO_POSE[s.dataset.holo||'off'];
     Timeline.go(n/(this.slides.length-1));Coach.say(s.dataset.coach||'');
     s.querySelectorAll('[data-count]').forEach(countUp);
+    this.step=0;this.applyStep();
     Demo.active(n===3);Alv.active(n===1);
   }
 }
@@ -756,22 +767,23 @@ const Alv=(()=>{const q=id=>document.getElementById(id);let on=false,t0=0;
     if(dash){const m=document.createElementNS(NS,'mask'),id='m'+Math.random().toString(36).slice(2);m.id=id;const mp=p.cloneNode();mp.setAttribute('stroke','#fff');m.appendChild(mp);svg.insertBefore(m,svg.firstChild);
       p.classList.remove('draw');p.style.strokeDasharray=dash;p.setAttribute('mask',`url(#${id})`)}return p};
   const text=(x,y,t,col,delay,size=19,anchor='start',weight=600)=>{const e=el('text',{x,y,fill:col,'font-size':size,'text-anchor':anchor,'font-weight':weight},t);e.classList.add('fadeT');e.style.setProperty('--dl',delay+'s');return e};
+  const st=(e,n,h)=>{e.setAttribute('data-step',n);if(h)e.setAttribute('data-hide',h);const m=e.getAttribute('mask');if(m){const mp=svg.querySelector(m.slice(4,-1)+' path');if(mp)mp.setAttribute('data-step',n)}return e};
   // suit pressure: 8.2 psi habitat → 4.3 psi suit
   const sp=`M${X(0)} ${YP(8.2)} L${X(1.75)} ${YP(8.2)} L${X(2)} ${YP(4.3)} L${X(10.4)} ${YP(4.3)}`;add(sp,'#d6403a',3,null,.3);
   text(X(.2),YP(8.2)-12,'Suit pressure','#ff7b7b',.6,19,'start',500);
   el('line',{x1:X(0),x2:X(2),y1:Y(64),y2:Y(64),stroke:'#93a68f'}).classList.add('fadeT');text(X(.1),Y(64)-10,'2 h prep and decompression','#93a68f',.5,16,'start',400);
-  el('line',{x1:X(2),x2:X(10),y1:Y(21),y2:Y(21),stroke:'#93a68f'}).classList.add('fadeT');text(X(6),Y(21)-10,'8 h EVA at 4.3 psi','#93a68f',.7,16,'middle',400);
-  add(path(curve(58,1.6),0,10.4),'#ff5d6c',3.5,'12 9',.9);
-  add(path(curve(35,1.55),0,10.4),'#4fa9ff',4,null,1.1);
-  add(path(curve(14.5,1.45),0,10.4),'#5ef0a0',3.5,'12 9',1.3);
-  text(X(9.7),Y(58)-14,'Δlung = −1.80 %  DCS 20.5 %','#ff7b7b',2.2,19,'end');
-  text(X(9.7),Y(35)-14,'Δlung = −1.11 % (NASA estimate)  DCS 6.6 %','#7fb2ff',2.4,19,'end');
-  text(X(9.7),Y(14.5)-14,'Δlung = −0.50 %  DCS 1.4 %','#7de6a8',2.6,19,'end');
+  st(el('line',{x1:X(2),x2:X(10),y1:Y(21),y2:Y(21),stroke:'#93a68f'}),1,2);st(text(X(6),Y(21)-10,'8 h EVA at 4.3 psi','#93a68f',0,16,'middle',400),1,2);
+  st(add(path(curve(58,1.6),0,10.4),'#ff5d6c',3.5,'12 9',0),3);
+  st(add(path(curve(35,1.55),0,10.4),'#4fa9ff',4,null,0),2);
+  st(add(path(curve(14.5,1.45),0,10.4),'#5ef0a0',3.5,'12 9',0),5);
+  st(text(X(9.7),Y(58)-14,'Δlung = −1.80 %  DCS 20.5 %','#ff7b7b',0,19,'end'),3);
+  st(text(X(9.7),Y(35)-14,'Δlung = −1.11 % (NASA estimate)  DCS 6.6 %','#7fb2ff',0,19,'end'),2);
+  st(text(X(9.7),Y(14.5)-14,'Δlung = −0.50 %  DCS 1.4 %','#7de6a8',0,19,'end'),5);
   // margins
-  const arr=(x,y1,y2,col,dl)=>{const l=el('line',{x1:x,x2:x,y1:y1,y2:y2,stroke:col,'stroke-width':3,'marker-start':'url(#ahc)','marker-end':'url(#ahc)'});l.classList.add('fadeT');l.style.setProperty('--dl',dl+'s')};
-  arr(X(10.05),Y(57),Y(36.5),'#eef6e8',2.9);arr(X(10.05),Y(33.5),Y(16),'#c6f27a',3.2);
-  text(X(9.85),Y(49),'Safety','#eef6e8',2.9,20,'end',700);text(X(9.85),Y(49)+22,'Margin','#eef6e8',2.9,20,'end',700);
-  text(X(9.85),Y(26),'Efficiency','#c6f27a',3.2,20,'end',700);text(X(9.85),Y(26)+22,'Margin','#c6f27a',3.2,20,'end',700);
+  const arr=(x,y1,y2,col,dl)=>{const l=el('line',{x1:x,x2:x,y1:y1,y2:y2,stroke:col,'stroke-width':3,'marker-start':'url(#ahc)','marker-end':'url(#ahc)'});l.setAttribute('data-step',dl)};
+  arr(X(10.05),Y(57),Y(36.5),'#eef6e8',4);arr(X(10.05),Y(33.5),Y(16),'#c6f27a',6);
+  st(text(X(9.85),Y(49),'Safety','#eef6e8',0,20,'end',700),4);st(text(X(9.85),Y(49)+22,'Margin','#eef6e8',0,20,'end',700),4);
+  st(text(X(9.85),Y(26),'Efficiency','#c6f27a',0,20,'end',700),6);st(text(X(9.85),Y(26)+22,'Margin','#c6f27a',0,20,'end',700),6);
   // marker for arrows (svg-local)
   const defs=document.createElementNS(NS,'defs');defs.innerHTML='<marker id="ahc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="context-stroke"/></marker>';svg.insertBefore(defs,svg.firstChild);
 })();
