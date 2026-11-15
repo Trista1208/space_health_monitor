@@ -251,6 +251,28 @@ h2.title{font-family:var(--display);font-weight:600;font-size:68px;line-height:1
 .s2 .col-l{top:282px}
 .s2 .measure{font-size:27px;margin-top:14px}
 .s2 .measure small{font-size:18px;margin-top:6px}
+.eq2{position:absolute;left:72px;top:290px;width:1776px;font-family:var(--display);font-weight:700;color:var(--red)}
+.eq2 .l1{display:flex;align-items:center;gap:26px;font-size:64px}
+.eq2 .l2{display:flex;align-items:center;gap:16px;font-size:40px;margin:6px 0 0 1010px}
+.eq2 .bub{display:flex;gap:6px;align-items:flex-end}
+.eq2 .bub b{display:block;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe2a6,#ffbf5a 55%,#e8902a);box-shadow:0 0 18px rgba(255,200,87,.5);animation:grow 3.2s var(--ease) infinite}
+.eq2 .l1 .bub b:nth-child(1){width:36px;height:36px}.eq2 .l1 .bub b:nth-child(2){width:26px;height:26px}.eq2 .l1 .bub b:nth-child(3){width:44px;height:44px}
+.eq2 .l2 .bub b{width:20px;height:20px}
+.eq2 .arrow{color:var(--fg);font-weight:500}
+.fact{position:absolute;left:72px;top:480px;width:820px;font-family:var(--display);font-weight:600;color:#ff8e8e}
+.fact .ft{font-size:38px}
+.fact ul{list-style:none;margin-top:8px;display:grid;gap:6px}
+.fact li{font-size:34px;padding-left:30px;position:relative}
+.fact li::before{content:"";position:absolute;left:4px;top:18px;width:10px;height:10px;border-radius:50%;background:#ff8e8e}
+.instead{position:absolute;left:1080px;top:490px;width:780px;font-family:var(--display);font-weight:600;font-size:32px;line-height:1.3;color:#ff8e8e}
+.instead p+p{margin-top:28px}
+.alv2{position:absolute;left:560px;top:640px;width:800px;margin:0;padding:10px 18px 4px}
+.alv2 svg{height:200px}
+.s2b .head{position:absolute;left:72px;top:140px;width:1776px}
+.s2b .col-r{position:absolute;left:310px;top:280px;width:1300px;height:620px;padding:22px 26px 16px}
+.s2b .chart{width:100%;height:100%;display:block}
+.s2b.visible .draw{animation:draw 2.6s var(--ease) forwards;animation-delay:var(--dl,0s)}
+.s2b.visible .fadeT{opacity:1;transition-delay:var(--dl,0s)}
 .sref .head{position:absolute;left:72px;top:140px}
 .refc{position:absolute;top:290px;width:556px;height:520px;padding:26px 32px}
 .r1{left:72px}.r2{left:682px}.r3{left:1292px}
@@ -383,7 +405,7 @@ body.editing [contenteditable="true"]{outline:1px dashed rgba(142,224,79,.45);ou
         <line id="tlCursor" x1="0" y1="-4" x2="0" y2="30" stroke="#ffc857" stroke-opacity=".6"/>
         <circle id="tlDot" cx="0" cy="18" r="7" fill="#ffc857" style="filter:drop-shadow(0 0 8px #ffc857)"/>
       </svg>
-      <div class="ch" id="chapters"><span>Liftoff</span><span>The science</span><span>Demo</span><span>Who it's for</span><span>Business</span><span>Sources</span><span>Debrief</span></div>
+      <div class="ch" id="chapters"><span>Liftoff</span><span>The science</span><span>Personal risk</span><span>Demo</span><span>Who it's for</span><span>Business</span><span>Sources</span><span>Debrief</span></div>
     </div>
   </div>
 
@@ -406,24 +428,28 @@ body.editing [contenteditable="true"]{outline:1px dashed rgba(142,224,79,.45);ou
     </div>
   </section>
 
-  <!-- ===== SLIDE 2 · TECHNICAL (from "technical page.pptx") ===== -->
+  <!-- ===== SLIDE 2 · THE SCIENCE (eva-physiology_2, slide 4) ===== -->
   <section class="slide s2" data-coach="DCS test · lung diffusing capacity → personal risk" data-holo="off">
     <div class="head">
       <div class="lbl reveal" style="--d:.05">The science</div>
       <h2 class="title reveal" style="--d:.15">A bubble you can't see, measured in one breath.</h2>
     </div>
-    <div class="col-l">
-      <div class="eq reveal" style="--d:.3"><span>EVA = ↓Pressure</span><span class="bub"><b></b><b></b><b></b></span><span class="arrow">=</span><span>↑ DCS risk</span></div>
-      <div class="nomethod reveal" style="--d:.4">No currently used method monitors DCS risk per astronaut.</div>
-      <div class="factors reveal" style="--d:.46">
-        <div class="flbl">Adjustable factors</div>
-        <div class="chips"><span>Oxygen prebreathe duration</span><span>Decompression rate</span><span>Time between EVAs</span></div>
-        <div class="fnote">Set from generalisable data today. <b>We monitor each individual, in real time.</b></div>
-      </div>
-      <div class="alv glass reveal" style="--d:.55">
-        <div class="state" id="alvState" style="color:var(--ok)">NORMAL</div>
-        <div class="breath">one breath, ten seconds</div>
-        <svg viewBox="0 0 760 300" aria-label="Alveolus and capillary, normal versus after a bubble">
+    <div class="eq2 reveal" style="--d:.3">
+      <div class="l1"><span>EVA = ↓Pressure</span><span class="arrow">=</span><span class="bub"><b></b><b></b><b></b></span><span class="arrow">→</span><span>DCS</span></div>
+      <div class="l2"><span>↑</span><span class="bub"><b></b><b></b><b></b></span><span>= ↑ DCS risk</span></div>
+    </div>
+    <div class="fact reveal" style="--d:.45">
+      <div class="ft">Adjustable factors:</div>
+      <ul><li>Oxygen prebreathe duration</li><li>Decompression rate</li><li>Time between EVAs</li></ul>
+    </div>
+    <div class="instead reveal" style="--d:.6">
+      <p>Currently based on generalisable data.</p>
+      <p>Instead, we monitor it in real-time in an individual.</p>
+    </div>
+    <div class="alv alv2 reveal" style="--d:.75">
+      <div class="state" id="alvState" style="color:var(--ok)">NORMAL</div>
+      <div class="breath">one breath, ten seconds</div>
+      <svg viewBox="0 0 760 300" aria-label="Alveolus and capillary, normal versus after a bubble">
           <defs>
             <radialGradient id="lungF" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#0f2a1a"/><stop offset="1" stop-color="#07140d"/></radialGradient>
             <linearGradient id="bloodF" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3a1414"/><stop offset="1" stop-color="#231010"/></linearGradient>
@@ -446,10 +472,16 @@ body.editing [contenteditable="true"]{outline:1px dashed rgba(142,224,79,.45);ou
           <ellipse id="bubble" cx="-40" cy="250" rx="30" ry="18" fill="#ffc46b" stroke="#ffe0a8" stroke-width="2" style="filter:drop-shadow(0 0 10px rgba(255,200,87,.7))"/>
           <text id="squeeze" x="650" y="190" text-anchor="middle" fill="#ffa64a" font-family="IBM Plex Mono" font-size="18" opacity="0">squeezing through</text>
         </svg>
-      </div>
-      <div class="measure reveal" style="--d:.75">We measure the lung damage to give an individualised DCS risk assessment.<small>How much DCS risk did that protocol cause? Corrected for oxygen exposure, lunar dust and personal health data.</small></div>
     </div>
-    <div class="col-r glass reveal" style="--d:.35">
+  </section>
+
+  <!-- ===== SLIDE 3 · PERSONAL RISK (eva-physiology_2, slide 5) ===== -->
+  <section class="slide s2b" data-coach="Δlung · same EVA, different personal risk" data-holo="off">
+    <div class="head">
+      <div class="lbl reveal" style="--d:.05">Personal risk</div>
+      <h2 class="title reveal" style="--d:.15">Same EVA. Three different risks.</h2>
+    </div>
+    <div class="col-r glass reveal" style="--d:.3">
       <svg class="chart" id="chart" viewBox="0 0 900 590" aria-label="Accumulated decompression burden over an 8 hour EVA"></svg>
     </div>
   </section>
@@ -612,7 +644,7 @@ class SlidePresentation{
     const s=this.slides[n];Space.target=HOLO_POSE[s.dataset.holo||'off'];
     Timeline.go(n/(this.slides.length-1));Coach.say(s.dataset.coach||'');
     s.querySelectorAll('[data-count]').forEach(countUp);
-    Demo.active(n===2);Alv.active(n===1);
+    Demo.active(n===3);Alv.active(n===1);
   }
 }
 
@@ -732,16 +764,16 @@ const Alv=(()=>{const q=id=>document.getElementById(id);let on=false,t0=0;
   add(path(curve(58,1.6),0,10.4),'#ff5d6c',3.5,'12 9',.9);
   add(path(curve(35,1.55),0,10.4),'#4fa9ff',4,null,1.1);
   add(path(curve(14.5,1.45),0,10.4),'#5ef0a0',3.5,'12 9',1.3);
-  text(X(9.7),Y(58)-14,'Δlung −1.80 %  ·  DCS 20.5 %','#ff7b7b',2.2,19,'end');
-  text(X(9.7),Y(35)-14,'Δlung −1.11 % (NASA estimate)  ·  DCS 6.6 %','#7fb2ff',2.4,19,'end');
-  text(X(9.7),Y(14.5)-14,'Δlung −0.50 %  ·  DCS 1.4 %','#7de6a8',2.6,19,'end');
+  text(X(9.7),Y(58)-14,'Δlung = −1.80 %  DCS 20.5 %','#ff7b7b',2.2,19,'end');
+  text(X(9.7),Y(35)-14,'Δlung = −1.11 % (NASA estimate)  DCS 6.6 %','#7fb2ff',2.4,19,'end');
+  text(X(9.7),Y(14.5)-14,'Δlung = −0.50 %  DCS 1.4 %','#7de6a8',2.6,19,'end');
   // margins
-  const arr=(x,y1,y2,col,dl)=>{const l=el('line',{x1:x,x2:x,y1:y1,y2:y2,stroke:col,'stroke-width':3,'marker-start':'url(#ah)','marker-end':'url(#ah)'});l.classList.add('fadeT');l.style.setProperty('--dl',dl+'s')};
+  const arr=(x,y1,y2,col,dl)=>{const l=el('line',{x1:x,x2:x,y1:y1,y2:y2,stroke:col,'stroke-width':3,'marker-start':'url(#ahc)','marker-end':'url(#ahc)'});l.classList.add('fadeT');l.style.setProperty('--dl',dl+'s')};
   arr(X(10.05),Y(57),Y(36.5),'#eef6e8',2.9);arr(X(10.05),Y(33.5),Y(16),'#c6f27a',3.2);
-  text(X(9.85),Y(49),'Safety','#eef6e8',2.9,20,'end',700);text(X(9.85),Y(49)+22,'margin','#eef6e8',2.9,20,'end',700);
-  text(X(9.85),Y(26),'Efficiency','#c6f27a',3.2,20,'end',700);text(X(9.85),Y(26)+22,'margin','#c6f27a',3.2,20,'end',700);
+  text(X(9.85),Y(49),'Safety','#eef6e8',2.9,20,'end',700);text(X(9.85),Y(49)+22,'Margin','#eef6e8',2.9,20,'end',700);
+  text(X(9.85),Y(26),'Efficiency','#c6f27a',3.2,20,'end',700);text(X(9.85),Y(26)+22,'Margin','#c6f27a',3.2,20,'end',700);
   // marker for arrows (svg-local)
-  const defs=document.createElementNS(NS,'defs');defs.innerHTML='<marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="context-stroke"/></marker>';svg.insertBefore(defs,svg.firstChild);
+  const defs=document.createElementNS(NS,'defs');defs.innerHTML='<marker id="ahc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="context-stroke"/></marker>';svg.insertBefore(defs,svg.firstChild);
 })();
 
 /* ===========================================
